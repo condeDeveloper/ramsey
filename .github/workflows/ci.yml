@@ -1,0 +1,44 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ${{ matrix.so }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        so: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # O juiz olha TODOS os subconjuntos de vertices do tamanho pedido e pergunta
+      # se aquele punhado esta todo ligado ou todo desligado. Nao tem poda e nao
+      # sabe o que e Ramsey. A mesma pergunta e feita por um segundo caminho, com
+      # mascaras de bits, e os dois concordam em todas as 1.024 coloracoes de K5.
+      - name: testes
+        run: dotnet test testes/Ramsey.Testes/Ramsey.Testes.csproj -c Release --nologo -v q
+
+      - name: seis pessoas numa festa
+        run: dotnet run --project ferramentas/Medidor/Medidor.csproj -c Release -- festa
+
+      - name: as que escapam com cinco
+        run: dotnet run --project ferramentas/Medidor/Medidor.csproj -c Release -- pentagono
+
+      - name: a varredura cega contra a busca por vertice
+        run: dotnet run --project ferramentas/Medidor/Medidor.csproj -c Release -- motores
+
+      - name: os numeros de Ramsey que cabem
+        run: dotnet run --project ferramentas/Medidor/Medidor.csproj -c Release -- numeros
+
+      - name: a formula de Goodman contra a varredura
+        run: dotnet run --project ferramentas/Medidor/Medidor.csproj -c Release -- goodman
